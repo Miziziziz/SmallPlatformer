@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://industrial.v2.png" type="Texture" id=1]
+[ext_resource path="res://Gun.gd" type="Script" id=2]
+
+[node name="Turret" type="Node2D"]
+
+[node name="Gun" type="Sprite" parent="." groups=[
+"need_player_ref",
+]]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 3, 354, 12, 7 )
+script = ExtResource( 2 )
+
+[node name="Handle" type="Sprite" parent="."]
+position = Vector2( 0, -4.88843 )
+rotation = -3.14159
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 4, 361, 8, 7 )
