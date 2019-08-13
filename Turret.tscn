@@ -19,3 +19,9 @@ rotation = -3.14159
 texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 4, 361, 8, 7 )
+
+[node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]
+position = Vector2( 0.473341, -0.473337 )
+scale = Vector2( 1.11045, 0.952666 )
+[connection signal="screen_entered" from="VisibilityEnabler2D" to="Gun" method="_on_VisibilityEnabler2D_screen_entered"]
+[connection signal="screen_exited" from="VisibilityEnabler2D" to="Gun" method="_on_VisibilityEnabler2D_screen_exited"]

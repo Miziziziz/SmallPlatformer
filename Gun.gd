@@ -11,14 +11,15 @@ var rang = 500
 var bullet = preload("res://Bullet.tscn")
 
 func _physics_process(delta):
-	if player == null:
-		return
-	var dir_to_player = player.global_position - global_position
-	rotation = dir_to_player.angle()
-	fire_time += delta
-	if fire_time > fire_rate:
-		fire_time = 0
-		fire()
+	if delta:
+		if player == null:
+			return
+		var dir_to_player = player.global_position - global_position
+		rotation = dir_to_player.angle()
+		fire_time += delta
+		if fire_time > fire_rate:
+			fire_time = 0
+			fire()
 
 func fire():
 	if global_position.distance_to(player.global_position) > rang:
@@ -31,3 +32,13 @@ func fire():
 
 func set_player(p):
 	player = p
+
+
+func _on_VisibilityEnabler2D_screen_entered():
+	pause_mode = false
+	pass # Replace with function body.
+
+func _on_VisibilityEnabler2D_screen_exited():
+	pause_mode = true
+	pass # Replace with function body.
+
