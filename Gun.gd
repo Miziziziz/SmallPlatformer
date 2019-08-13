@@ -2,7 +2,8 @@ extends Sprite
 
 var player = null
 
-var rot_speed = 0.1
+# commented ones are not used throughout the game.
+# var rot_speed = 0.1
 var fire_rate = 1.0
 var fire_time = 0.0
 var rang = 500
