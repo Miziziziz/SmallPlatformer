@@ -62,6 +62,7 @@ emission_sphere_radius = 2.1
 flag_disable_z = true
 gravity = Vector3( 0, 98, 0 )
 initial_velocity = 67.6
+angular_velocity = 7.70714e-44
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 color = Color( 1, 0, 0, 1 )

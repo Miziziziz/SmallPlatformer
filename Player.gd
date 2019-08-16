@@ -30,68 +30,67 @@ func _input(event):
 		#print(reload)
 	pass
 
-func _process(delta):
-	if delta:
-		if Input.is_action_pressed("exit"):
-			get_tree().quit()
+func _process(_delta):
+	if Input.is_action_pressed("exit"):
+		get_tree().quit()
 		
-		if dead and Input.is_action_pressed("restart"):
-			get_tree().paused = true
-			#get_tree().reload_current_scene()
+	if dead and Input.is_action_pressed("restart"):
+		get_parent().get_node("bullets").free() # No more bullets after reseting the game.
+		get_tree().paused = true
+		#get_tree().reload_current_scene()
 
-func _physics_process(delta):
-	if delta:
-		var move_vec = Vector2()
-		if !dead:
-			if Input.is_action_pressed("move_left"):
-				move_vec.x -= 1
-			if Input.is_action_pressed("move_right"):
-				move_vec.x += 1
+func _physics_process(_delta):
+	var move_vec = Vector2()
+	if !dead:
+		if Input.is_action_pressed("move_left"):
+			move_vec.x -= 1
+		if Input.is_action_pressed("move_right"):
+			move_vec.x += 1
 		
-		velo += move_vec * move_speed - drag * Vector2(velo.x, 0)
+	velo += move_vec * move_speed - drag * Vector2(velo.x, 0)
 		
-		var cur_grounded = is_on_floor()
-		if !cur_grounded and last_grounded:
-			time_left_ground = get_cur_time()
+	var cur_grounded = is_on_floor()
+	if !cur_grounded and last_grounded:
+		time_left_ground = get_cur_time()
+	
+	#var will_jump = false
+	var pressed_jump = Input.is_action_just_pressed("jump")
+	
+	if pressed_jump:
+		time_pressed_jump = get_cur_time()
+	
+	if (pressed_jump and cur_grounded):
+		jump()
+	elif (!last_grounded and cur_grounded and get_cur_time() - time_pressed_jump < jump_buffer):
+		jump()
+	elif pressed_jump and get_cur_time() - time_left_ground < jump_buffer:
+		jump()
+	
+	if Input.is_action_pressed("jump"):
+		velo.y += less_gravity
+	else:
+		velo.y += gravity
+	
+	if cur_grounded and velo.y > 10:
+		velo.y = 10
 		
-		#var will_jump = false
-		var pressed_jump = Input.is_action_just_pressed("jump")
+	velo = move_and_slide(velo, Vector2.UP)
+	
+	if move_vec.x > 0.0 and !facing_right:
+		flip()
+	elif move_vec.x < 0.0 and facing_right:
+		flip()
 		
-		if pressed_jump:
-			time_pressed_jump = get_cur_time()
-		
-		if (pressed_jump and cur_grounded):
-			jump()
-		elif (!last_grounded and cur_grounded and get_cur_time() - time_pressed_jump < jump_buffer):
-			jump()
-		elif pressed_jump and get_cur_time() - time_left_ground < jump_buffer:
-			jump()
-		
-		if Input.is_action_pressed("jump"):
-			velo.y += less_gravity
+	if cur_grounded:
+		if move_vec == Vector2():
+			play_anim("idle")
 		else:
-			velo.y += gravity
-		
-		if cur_grounded and velo.y > 10:
-			velo.y = 10
-		
-		velo = move_and_slide(velo, Vector2.UP)
-		
-		if move_vec.x > 0.0 and !facing_right:
-			flip()
-		elif move_vec.x < 0.0 and facing_right:
-			flip()
-		
-		if cur_grounded:
-			if move_vec == Vector2():
-				play_anim("idle")
-			else:
-				play_anim("walk")
-		else:
-			play_anim("jump")
+			play_anim("walk")
+	else:
+		play_anim("jump")
 		
 		
-		last_grounded = cur_grounded
+	last_grounded = cur_grounded
 
 func jump():
 	if dead:
