@@ -18,32 +18,42 @@ onready var anim_player = $AnimationPlayer
 
 var dead = false
 
+var reload
+
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	get_tree().call_group("need_player_ref", "set_player", self)
 
-func _process(delta):
+func _input(event):
+	if event.is_action_pressed("restart"):
+		reload = get_tree().reload_current_scene()
+		#print(reload)
+	pass
+
+func _process(_delta):
 	if Input.is_action_pressed("exit"):
 		get_tree().quit()
-	
+		
 	if dead and Input.is_action_pressed("restart"):
-		get_tree().reload_current_scene()
+		get_parent().get_node("bullets").free() # No more bullets after reseting the game.
+		get_tree().paused = true
+		#get_tree().reload_current_scene()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var move_vec = Vector2()
 	if !dead:
 		if Input.is_action_pressed("move_left"):
 			move_vec.x -= 1
 		if Input.is_action_pressed("move_right"):
 			move_vec.x += 1
-	
+		
 	velo += move_vec * move_speed - drag * Vector2(velo.x, 0)
-	
+		
 	var cur_grounded = is_on_floor()
 	if !cur_grounded and last_grounded:
 		time_left_ground = get_cur_time()
 	
-	var will_jump = false
+	#var will_jump = false
 	var pressed_jump = Input.is_action_just_pressed("jump")
 	
 	if pressed_jump:
@@ -63,14 +73,14 @@ func _physics_process(delta):
 	
 	if cur_grounded and velo.y > 10:
 		velo.y = 10
-	
-	move_and_slide(velo, Vector2.UP)
+		
+	velo = move_and_slide(velo, Vector2.UP)
 	
 	if move_vec.x > 0.0 and !facing_right:
 		flip()
 	elif move_vec.x < 0.0 and facing_right:
 		flip()
-	
+		
 	if cur_grounded:
 		if move_vec == Vector2():
 			play_anim("idle")
@@ -78,8 +88,8 @@ func _physics_process(delta):
 			play_anim("walk")
 	else:
 		play_anim("jump")
-	
-	
+		
+		
 	last_grounded = cur_grounded
 
 func jump():

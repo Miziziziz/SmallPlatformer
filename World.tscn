@@ -87,6 +87,8 @@ position = Vector2( 3209.78, -183.953 )
 [node name="Turret13" parent="." instance=ExtResource( 3 )]
 position = Vector2( 2030.83, -271.709 )
 
+[node name="bullets" type="Node2D" parent="."]
+
 [node name="WinMessage" type="Label" parent="."]
 margin_left = 3969.24
 margin_top = -80.5156
